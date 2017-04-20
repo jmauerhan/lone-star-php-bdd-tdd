@@ -33,7 +33,7 @@ class ChirpIoService
             return new InternalServerErrorResponse();
         }
 
-        return new Response(Response::CREATED);
+        return new ChirpCreatedResponse();
     }
 
 }
