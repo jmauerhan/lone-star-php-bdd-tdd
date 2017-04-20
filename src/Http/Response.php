@@ -6,4 +6,5 @@ class Response extends \GuzzleHttp\Psr7\Response
 {
 
     const CREATED = 201;
+    const BAD_REQUEST = 400;
 }
