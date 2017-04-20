@@ -46,7 +46,7 @@ class CreateChirpContext implements Context
     public function iPostTheChirp()
     {
         $this->uuid = $this->faker->uuid;
-        $obj  = (object)[
+        $obj        = (object)[
             'data' => (object)[
                 'type' => 'chirp',
                 'id' => $this->uuid,
@@ -64,6 +64,15 @@ class CreateChirpContext implements Context
      */
     public function iShouldSeeItInMyTimeline()
     {
-        throw new PendingException();
+        $response  = $this->httpClient->get('timeline');
+        $json      = $response->getBody()->getContents();
+        $chirpData = json_decode($json);
+        $chirps    = $chirpData->data;
+        foreach ($chirps AS $chirp) {
+            if ($chirp->attributes->text == $this->chirpText && $chirp->id == $this->uuid) {
+                return true;
+            }
+        }
+        throw new \Exception("Chirp with text '{$this->chirpText}' and UUID: {$this->uuid} not found");
     }
 }
