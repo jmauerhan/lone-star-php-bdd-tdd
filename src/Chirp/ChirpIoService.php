@@ -21,6 +21,8 @@ class ChirpIoService
 
     public function create(Request $request): Response
     {
+        $json = $request->getBody()->getContents();
+        $this->jsonChirpTransformer->toChirp($json);
         return new Response(Response::CREATED);
     }
 
