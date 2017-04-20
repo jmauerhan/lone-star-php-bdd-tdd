@@ -31,18 +31,19 @@ class ChirpIoServiceTest extends TestCase
 
     public function testCreateReturnsInvalidChirpResponseWhenTransformerThrowsException()
     {
+        $exception   = new InvalidJsonException('{');
         $transformer = $this->createMock(JsonChirpTransformer::class);
         $transformer->method('toChirp')
-                    ->willThrowException(new InvalidJsonException('{'));
-
-        $expectedResponse = new InvalidChirpResponse('Json was invalid');
+                    ->willThrowException($exception);
 
         $persistenceDriver = $this->createMock(ChirpPersistenceDriver::class);
         $service           = new ChirpIoService($transformer, $persistenceDriver);
         $request           = new Request('POST', 'chirp');
         $response          = $service->create($request);
 
-        $this->assertEquals($expectedResponse, $response);
+        $message = 'Json was invalid: ' . $exception->getMessage();
+        $this->assertInstanceOf(InvalidChirpResponse::class, $response);
+        $this->assertEquals($message, $response->getBody()->getContents());
     }
 //
 //    public function testCreateSendsChirpToDatabaseDriver()
