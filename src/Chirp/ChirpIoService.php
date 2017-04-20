@@ -21,7 +21,7 @@ class ChirpIoService
 
     public function create(Request $request): Response
     {
-
+        return new Response(Response::CREATED);
     }
 
 }
